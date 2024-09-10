@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "703507391073",
+    "project_id": "chirpquest",
+    "storage_bucket": "chirpquest.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:703507391073:android:8584b748289524587e8020",
+        "android_client_info": {
+          "package_name": "com.rosebank.st10070002.chirpquest"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD9rpDuIKHbOXjUGimAmrdEquSExspaGgo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
