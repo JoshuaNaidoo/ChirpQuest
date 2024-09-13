@@ -49,14 +49,15 @@
                 android:id="@+id/FirstNameTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
                 android:background="#A6FF00"
                 android:scaleType="centerInside"
                 android:text="@string/first_name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintStart_toStartOf="parent"
                 tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp"
                 tools:layout_editor_absoluteY="27dp" />
 
             <EditText
@@ -69,23 +70,26 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/FirstNameTV"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/SurnameTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
                 android:background="#A6FF00"
                 android:scaleType="centerInside"
                 android:text="Last Name"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                android:paddingTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/NameET"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
             <EditText
                 android:id="@+id/SurnameET"
@@ -97,24 +101,27 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/SurnameTV"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
 
             <TextView
                 android:id="@+id/UsernameTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
                 android:background="#A6FF00"
                 android:scaleType="centerInside"
                 android:text="Username"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                android:paddingTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/SurnameET"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
             <EditText
                 android:id="@+id/UsernameET"
@@ -125,25 +132,27 @@
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/UsernameTV"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
 
             <TextView
                 android:id="@+id/EmailTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
                 android:background="#A6FF00"
                 android:scaleType="centerInside"
                 android:text="Email"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                android:paddingTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/UsernameET"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="47dp" />
-
+                tools:ignore="MissingConstraints" />
 
             <EditText
                 android:id="@+id/EmailET"
@@ -154,23 +163,26 @@
                 android:inputType="text"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/EmailTV"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="50dp" />
+                tools:ignore="MissingConstraints" />
 
             <TextView
                 android:id="@+id/PasswordTV"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_marginStart="60dp"
                 android:background="#A6FF00"
                 android:scaleType="centerInside"
                 android:text="Password"
                 android:textAlignment="center"
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                android:paddingTop="15dp"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/EmailET"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
             <EditText
                 android:id="@+id/PasswordET"
@@ -182,9 +194,10 @@
                 android:text=""
                 android:textColor="@color/black"
                 android:textSize="28sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/PasswordTV"
-                tools:ignore="MissingConstraints"
-                tools:layout_editor_absoluteX="49dp" />
+                tools:ignore="MissingConstraints" />
 
             <Button
                 android:id="@+id/registerBtn"
@@ -194,6 +207,7 @@
                 android:layout_marginTop="10dp"
                 android:layout_marginEnd="16dp"
                 android:backgroundTint="@color/black"
+                android:onClick="RegisterClick"
                 android:text="Register"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -209,6 +223,7 @@
                 android:layout_marginEnd="16dp"
                 android:layout_marginBottom="16dp"
                 android:backgroundTint="#A6FF00"
+                android:onClick="LoginPageClick"
                 android:text="Already have an account? Click here to login."
                 android:textAlignment="center"
                 android:textColor="@color/black"

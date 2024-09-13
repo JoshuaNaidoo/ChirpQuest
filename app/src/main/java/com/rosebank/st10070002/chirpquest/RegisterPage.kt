@@ -3,6 +3,7 @@ package com.rosebank.st10070002.chirpquest
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import android.widget.Toast
@@ -41,5 +42,13 @@ class RegisterPage : AppCompatActivity() {
         fAuth = FirebaseAuth.getInstance()
         fStore = FirebaseFirestore.getInstance()
 
+    }
+
+    fun RegisterClick(view: View) {
+
+    }
+    fun LoginPageClick(view: View) {
+        // Redirect to Login Page
+        startActivity(Intent(this, LoginPage::class.java))
     }
 }

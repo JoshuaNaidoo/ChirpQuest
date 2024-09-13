@@ -7,6 +7,7 @@ plugins {
 android {
     namespace = "com.rosebank.st10070002.chirpquest"
     compileSdk = 34
+    viewBinding.enable = true
 
     defaultConfig {
         applicationId = "com.rosebank.st10070002.chirpquest"
@@ -53,6 +54,7 @@ dependencies {
     implementation(libs.firebase.database)
     implementation(libs.androidx.activity)
     implementation(libs.firebase.firestore.ktx)
+    implementation(libs.androidx.annotation)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
