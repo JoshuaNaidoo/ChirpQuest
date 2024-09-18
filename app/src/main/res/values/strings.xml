@@ -25,4 +25,5 @@
     <string name="menu_create_findings">menu_create_findings</string>
     <string name="open" />
     <string name="close" />
+    <string name="findings">Findings</string>
 </resources>
