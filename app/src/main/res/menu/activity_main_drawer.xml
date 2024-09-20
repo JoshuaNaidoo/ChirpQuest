@@ -9,16 +9,26 @@
             android:icon="@drawable/ic_menu_camera"
             android:title="@string/menu_home" />
         <item
-            android:id="@+id/nav_gallery"
+            android:id="@+id/menu_nearby"
             android:icon="@drawable/ic_menu_gallery"
-            android:title="@string/menu_gallery" />
+            android:title="Near By" />
         <item
-            android:id="@+id/nav_slideshow"
+            android:id="@+id/menu_capture"
             android:icon="@drawable/ic_menu_slideshow"
-            android:title="@string/menu_slideshow" />
+            android:title="Capture" />
         <item
             android:id="@+id/menu_findings"
             android:title="@string/findings"
+            android:icon="@drawable/ic_menu_gallery" />
+
+        <item
+            android:id="@+id/menu_flock"
+            android:title="Flock"
+            android:icon="@drawable/ic_menu_gallery" />
+
+        <item
+            android:id="@+id/menu_settings"
+            android:title="Settings"
             android:icon="@drawable/ic_menu_gallery" />
     </group>
 </menu>

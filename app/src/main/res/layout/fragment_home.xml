@@ -4,20 +4,101 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_container_view"
+    android:id="@+id/fragment_home"
+    android:orientation="vertical"
+    android:background="#3E3E3E"
     tools:context=".ui.home.HomeFragment">
 
-    <TextView
-        android:id="@+id/text_home"
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="80dp"
+        android:orientation="horizontal"
+        android:background="#A6FF00">
+
+        <TextView
+            android:id="@+id/home_header_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginEnd="16dp"
+            android:textAlignment="center"
+            android:gravity="center"
+            android:layout_gravity="center"
+            android:textSize="22sp"
+            android:text="ChirpQuest"
+            android:textColor="@color/black"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </LinearLayout>
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
-        android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
-        android:textAlignment="center"
-        android:textSize="20sp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:orientation="vertical"
+        android:paddingLeft="22dp"
+        android:paddingRight="22dp"
+        android:paddingTop="8dp"
+        android:paddingBottom="8dp">
+
+        <Button
+            android:id="@+id/home_Nearby_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Nearby"
+            android:textColor="@color/black"
+            android:backgroundTint="#A6FF00" />
+
+        <Button
+            android:id="@+id/home_Capture_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Capture"
+            android:textColor="@color/black"
+            android:backgroundTint="#A6FF00" />
+
+        <Button
+            android:id="@+id/home_Findings_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Findings"
+            android:textColor="@color/black"
+            android:backgroundTint="#A6FF00" />
+
+        <Button
+            android:id="@+id/home_Flock_Btn"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:paddingTop="6dp"
+            android:paddingBottom="6dp"
+            android:text="Flock"
+            android:textColor="@color/black"
+            android:backgroundTint="#A6FF00" />
+
+    </LinearLayout>
+
+    <RelativeLayout
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- Other views above the LinearLayout -->
+
+        <LinearLayout
+            android:id="@+id/home_bottom_layout"
+            android:layout_width="match_parent"
+            android:layout_height="80dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:background="#A6FF00">
+
+        </LinearLayout>
+    </RelativeLayout>
+
 </LinearLayout>
