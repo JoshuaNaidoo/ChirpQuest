@@ -1,17 +1,14 @@
-package com.rosebank.st10070002.chirpquest.ui.home
+package com.rosebank.st10070002.chirpquest.ui.settings
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import com.rosebank.st10070002.chirpquest.R
 import com.rosebank.st10070002.chirpquest.databinding.FragmentHomeBinding
 
-
-class HomeFragment : Fragment() {
+class SettingsFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -22,9 +19,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        val root = inflater.inflate(R.layout.fragment_home,container,false)
+        val root = inflater.inflate(R.layout.fragment_settings,container,false)
 
         return root
     }
 }
-

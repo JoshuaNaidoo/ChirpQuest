@@ -14,8 +14,14 @@ import androidx.navigation.ui.setupActionBarWithNavController
 import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
+//import com.rosebank.st10070002.chirpquest.R.id.fragment_home
+//import com.rosebank.st10070002.chirpquest.R.id.nav_nearby
 import com.rosebank.st10070002.chirpquest.databinding.ActivityMainBinding
+import com.rosebank.st10070002.chirpquest.ui.FindingsListing.FindingsListingFragment
+import com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment
+import com.rosebank.st10070002.chirpquest.ui.flock.FlockFragment
 import com.rosebank.st10070002.chirpquest.ui.home.HomeFragment
+import com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,7 +60,8 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_nearby,
+                R.id.nav_capture, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_settings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -73,6 +80,30 @@ class MainActivity : AppCompatActivity() {
                     // Replace fragment with CreateFindingsFragment
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, CreateFindingsFragment())
+                        .commit()
+                }
+                R.id.menu_capture -> {
+                    // Replace fragment with CaptureFragment
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
+                        .commit()
+                }
+                R.id.menu_findings -> {
+                    // Replace fragment with FindingsListingFragment
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, FindingsListingFragment())
+                        .commit()
+                }
+                R.id.menu_flock -> {
+                    // Replace fragment with FlockFrgament
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, FlockFragment())
+                        .commit()
+                }
+                R.id.menu_flock -> {
+                    // Replace fragment with SettingsFragment
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, SettingsFragment())
                         .commit()
                 }
                 // Handle other menu items

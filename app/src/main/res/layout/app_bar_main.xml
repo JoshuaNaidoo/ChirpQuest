@@ -15,8 +15,8 @@
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            app:popupTheme="@style/Theme.ChirpQuest.PopupOverlay" />
+            android:background="#A6FF00"
+            app:popupTheme="@style/Theme.ChirpQuest.PopupOverlay"/>
 
     </com.google.android.material.appbar.AppBarLayout>
 
