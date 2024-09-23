@@ -1,4 +1,4 @@
-package com.rosebank.st10070002.chirpquest.ui.home
+package com.rosebank.st10070002.chirpquest.ui.neaarby
 
 import android.os.Bundle
 import android.util.Log
@@ -8,10 +8,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import com.rosebank.st10070002.chirpquest.R
+import com.rosebank.st10070002.chirpquest.R.layout
 import com.rosebank.st10070002.chirpquest.databinding.FragmentHomeBinding
+import com.rosebank.st10070002.chirpquest.ui.home.HomeViewModel
 
 
-class HomeFragment : Fragment() {
+class NearbyFragment : Fragment() {
 
     private var _binding: FragmentHomeBinding? = null
 
@@ -22,9 +24,8 @@ class HomeFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
-        val root = inflater.inflate(R.layout.fragment_home,container,false)
+        val root = inflater.inflate(R.layout.fragment_nearby,container,false)
 
         return root
     }
 }
-

@@ -23,9 +23,33 @@
         android:label="@string/menu_slideshow"
         tools:layout="@layout/fragment_slideshow" />
     <fragment
+        android:id="@+id/nav_nearby"
+        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:label="menu_nearby"
+        tools:layout="@layout/fragment_nearby" />
+    <fragment
         android:id="@+id/nav_create_findings"
         android:name="com.rosebank.st10070002.chirpquest.CreateFindingsFragment"
         android:label="@string/menu_create_findings"
         tools:layout="@layout/fragment_create_findings" />
-
+    <fragment
+        android:id="@+id/nav_capture"
+        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:label="menu_capture"
+        tools:layout="@layout/fragment_capture" />
+    <fragment
+        android:id="@+id/nav_findings_listing"
+        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:label="menu_findings_listing"
+        tools:layout="@layout/fragment_findings_listing" />
+    <fragment
+        android:id="@+id/nav_flock"
+        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:label="menu_flock"
+        tools:layout="@layout/fragment_flock" />
+    <fragment
+        android:id="@+id/nav_settings"
+        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:label="menu_settings"
+        tools:layout="@layout/fragment_settings" />
 </navigation>
