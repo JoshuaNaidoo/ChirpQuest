@@ -15,6 +15,8 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.rosebank.st10070002.chirpquest.databinding.ActivityMainBinding
+
+
 import com.rosebank.st10070002.chirpquest.ui.home.HomeFragment
 
 class MainActivity : AppCompatActivity() {
@@ -54,7 +56,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow,R.id.nav_create_findings
             ), drawerLayout
         )
         setupActionBarWithNavController(navController, appBarConfiguration)
@@ -69,13 +71,16 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.nav_host_fragment_content_main, HomeFragment())
                         .commit()
                 }
+
                 R.id.menu_findings -> {
                     // Replace fragment with CreateFindingsFragment
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, CreateFindingsFragment())
                         .commit()
                 }
-                // Handle other menu items
+
+
+
             }
             drawerLayout.closeDrawer(GravityCompat.START)
             true

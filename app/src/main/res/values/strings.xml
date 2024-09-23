@@ -26,4 +26,6 @@
     <string name="open" />
     <string name="close" />
     <string name="findings">Findings</string>
+    <string name="all_findings">All Findings</string>
+    <string name="create_all_findings">Create All Findings</string>
 </resources>

@@ -24,7 +24,7 @@
         tools:layout="@layout/fragment_slideshow" />
     <fragment
         android:id="@+id/nav_create_findings"
-        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:name="com.rosebank.st10070002.chirpquest.CreateFindingsFragment"
         android:label="@string/menu_create_findings"
         tools:layout="@layout/fragment_create_findings" />
 
