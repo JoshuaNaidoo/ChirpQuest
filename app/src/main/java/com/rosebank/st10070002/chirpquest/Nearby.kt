@@ -95,6 +95,7 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         // Replace with your API key
+        //Easy
 
         val apiKey = "p84spluvlo8a"
         val maxResults = 50 // Increase the max results
