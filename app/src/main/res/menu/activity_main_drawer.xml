@@ -20,6 +20,10 @@
             android:id="@+id/menu_findings"
             android:title="@string/findings"
             android:icon="@drawable/ic_menu_gallery" />
+        <item
+            android:id="@+id/menu_AllFindings"
+            android:title="@string/all_findings"
+            android:icon="@drawable/ic_menu_gallery" />
 
         <item
             android:id="@+id/menu_flock"

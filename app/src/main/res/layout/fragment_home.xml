@@ -40,7 +40,11 @@
         android:paddingRight="22dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
-
+        <TextView
+            android:id="@+id/textHome"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="This is home Fragment" />
         <Button
             android:id="@+id/home_Nearby_Btn"
             android:layout_width="match_parent"

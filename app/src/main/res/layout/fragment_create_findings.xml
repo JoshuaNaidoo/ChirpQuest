@@ -8,7 +8,11 @@
     android:padding="16dp"
     tools:context=".CreateFindingsFragment">
 
-    <!-- Header -->
+    <TextView
+        android:layout_width="wrap_content"
+        android:id="@+id/textFindings"
+        android:layout_height="wrap_content" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -17,53 +21,50 @@
         android:padding="8dp"
         android:background="#BFFF00">
 
-        <!-- Menu Button -->
-        <ImageButton
-            android:id="@+id/menuButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-             />
-
-        <!-- Title -->
         <TextView
             android:id="@+id/findingsTitle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:text="Findings"
             android:textColor="#000000"
-            android:textSize="20sp"
-            android:layout_marginStart="16dp" />
+            android:textSize="20sp" />
     </LinearLayout>
 
-    <!-- Bird Details -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="16dp">
 
-        <!-- Name/Species Input -->
         <EditText
             android:id="@+id/speciesInput"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:hint="Name / Species"
-            android:textColor="#FFFFFF"
             android:backgroundTint="#BFFF00"
-            android:padding="8dp" />
+            android:hint="Name / Species"
+            android:padding="8dp"
+            android:textColor="#FFFFFF" />
 
-        <!-- Photo Capture Button -->
         <ImageButton
             android:id="@+id/photoButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:src="@drawable/ic_menu_camera"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
             android:background="@drawable/ic_launcher_background"
-            android:layout_marginStart="16dp" />
+            android:src="@drawable/ic_menu_camera" />
+
     </LinearLayout>
 
-    <!-- Date, Time, and Location -->
+    <ImageView
+        android:id="@+id/photoImageView"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        android:layout_marginTop="16dp"
+        android:scaleType="centerCrop"
+        android:visibility="gone" /> <!-- Initially hidden -->
+
     <TextView
         android:id="@+id/dateText"
         android:layout_width="wrap_content"
@@ -88,18 +89,16 @@
         android:textColor="#FFFFFF"
         android:layout_marginTop="8dp" />
 
-    <!-- Description Input -->
     <EditText
         android:id="@+id/descriptionInput"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Description - Optional"
-        android:textColor="#FFFFFF"
+        android:layout_height="122dp"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#BFFF00"
+        android:hint="Description - Optional"
         android:padding="8dp"
-        android:layout_marginTop="16dp" />
+        android:textColor="#FFFFFF" />
 
-    <!-- Buttons -->
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -107,30 +106,28 @@
         android:layout_marginTop="16dp">
 
         <Button
-            android:id="@+id/backButton"
-            android:layout_width="wrap_content"
+            android:id="@+id/Save_FindingsButton"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:text="Back to Findings"
             android:layout_weight="1"
+            android:text="Save Findings"
             android:backgroundTint="#BFFF00" />
 
         <Button
             android:id="@+id/favoriteButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Favorite"
-            android:layout_weight="1"
-            android:backgroundTint="#999999" />
-
+            android:layout_marginStart="16dp"
+            android:backgroundTint="#999999"
+            android:text="Favorite" />
     </LinearLayout>
 
-    <!-- Post to Flock Button -->
     <Button
         android:id="@+id/postButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Post to Flock?"
         android:layout_marginTop="16dp"
-        android:backgroundTint="#BFFF00"
-        android:enabled="false" />
+        android:text="Post Findings"
+        android:backgroundTint="#BFFF00" />
+
 </LinearLayout>
