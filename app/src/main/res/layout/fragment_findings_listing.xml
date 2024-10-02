@@ -4,19 +4,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Fragment Listing Fragment"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="This Page is where the user selects the birds they have captured from a list"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Then from their selection within the list they go into the fragment_create_findings page"/>
-
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/findingsRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:padding="16dp" />
 </LinearLayout>

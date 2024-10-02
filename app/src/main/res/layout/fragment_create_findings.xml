@@ -39,7 +39,7 @@
 
         <EditText
             android:id="@+id/speciesInput"
-            android:layout_width="0dp"
+            android:layout_width="217dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:backgroundTint="#BFFF00"
@@ -49,21 +49,21 @@
 
         <ImageButton
             android:id="@+id/photoButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="152dp"
+            android:layout_height="122dp"
             android:layout_marginStart="16dp"
             android:background="@drawable/ic_launcher_background"
             android:src="@drawable/ic_menu_camera" />
-
     </LinearLayout>
 
+    <!-- ImageView added here to display the captured image -->
     <ImageView
-        android:id="@+id/photoImageView"
-        android:layout_width="match_parent"
-        android:layout_height="200dp"
+        android:id="@+id/imageView"
+        android:layout_width="378dp"
+        android:layout_height="128dp"
         android:layout_marginTop="16dp"
-        android:scaleType="centerCrop"
-        android:visibility="gone" /> <!-- Initially hidden -->
+        android:background="#000000"
+        android:scaleType="centerCrop" />
 
     <TextView
         android:id="@+id/dateText"
@@ -107,17 +107,17 @@
 
         <Button
             android:id="@+id/Save_FindingsButton"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
             android:text="Save Findings"
+            android:layout_weight="1"
             android:backgroundTint="#BFFF00" />
 
         <Button
             android:id="@+id/favoriteButton"
-            android:layout_width="wrap_content"
+            android:layout_width="102dp"
             android:layout_height="wrap_content"
-            android:layout_marginStart="16dp"
+            android:layout_weight="1"
             android:backgroundTint="#999999"
             android:text="Favorite" />
     </LinearLayout>
@@ -126,8 +126,8 @@
         android:id="@+id/postButton"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
         android:text="Post Findings"
+        android:layout_marginTop="16dp"
         android:backgroundTint="#BFFF00" />
 
 </LinearLayout>
