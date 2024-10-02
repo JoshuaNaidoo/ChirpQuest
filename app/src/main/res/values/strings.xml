@@ -11,21 +11,16 @@
     <string name="menu_gallery">Gallery</string>
     <string name="menu_slideshow">Slideshow</string>
     <string name="first_name">First Name</string>
-    <!-- Strings related to login -->
-    <string name="prompt_email">Email</string>
-    <string name="prompt_password">Password</string>
-    <string name="action_sign_in">Sign in or register</string>
-    <string name="action_sign_in_short">Sign in</string>
-    <string name="welcome">"Welcome!"</string>
-    <string name="invalid_username">Not a valid username</string>
-    <string name="invalid_password">Password must be >5 characters</string>
-    <string name="login_failed">"Login failed"</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="menu_create_findings">menu_create_findings</string>
-    <string name="open" />
-    <string name="close" />
+
+    <string name="button_description">Profile Picture button</string>
+    <string name="max_distance_hint">0</string>
+
+    <string name="google_map_api_key">AIzaSyC1wS5upMIXCW0ogY97-U72flZHJQfc7Ug</string>
+    <string name="ebird_api_key">p84spluvlo8a</string>
+    <string name="open">Open Navigation Drawer</string>
+    <string name="close">Close Navigation Drawer</string>
     <string name="findings">Findings</string>
-    <string name="all_findings">All Findings</string>
-    <string name="create_all_findings">Create All Findings</string>
+    <string name="menu_create_findings">Create Findings</string>
+
+
 </resources>
