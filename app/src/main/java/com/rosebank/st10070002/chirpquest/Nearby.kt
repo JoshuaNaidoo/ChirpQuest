@@ -1,6 +1,7 @@
 package com.rosebank.st10070002.chirpquest
 
 import android.Manifest
+import android.content.Context
 import android.content.pm.PackageManager
 import android.location.Location
 import androidx.annotation.NonNull
@@ -104,8 +105,8 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
-        val maxResults = 50 // Increases the max results
-        val radius = 50 //Radius in KMs
+        val maxResults = 50 //Set the amount of hotspots can appear in the radius
+        val radius = 50
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
             override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
@@ -113,21 +114,28 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
                     response.body()?.let { hotspots ->
                         var nearestDistance = Double.MAX_VALUE
                         var nearestHotspot: BirdHotspot? = null
+                        val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+                        val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
 
                         for (hotspot in hotspots) {
-                            // Create a new Location for the hotspot
                             val hotspotLocation = Location("").apply {
                                 setLatitude(hotspot.lat) // Set latitude using the setter method
-                                setLongitude(hotspot.lng) // Set longitude using the setter method
+                                setLongitude(hotspot.lng)
                             }
-                            // Create a new Location for the user's location
                             val userLocation = Location("").apply {
-                                setLatitude(latitude) // Set latitude using the setter method
-                                setLongitude(longitude) // Set longitude using the setter method
+                                this.latitude = latitude
+                                this.longitude = longitude
                             }
 
-                            // Calculate distance in meters (Float) and convert to Double
-                            val distance = userLocation.distanceTo(hotspotLocation).toDouble() // Convert Float to Double
+                            // Calculate the distance in meters
+                            var distance = userLocation.distanceTo(hotspotLocation).toDouble()
+
+                            // Convert the distance to kilometers or miles based on the setting
+                            if (distanceMetric == "Miles") {
+                                distance /= 1609.34  // Convert meters to miles
+                            } else {
+                                distance /= 1000 // Convert meters to kilometers
+                            }
 
                             // Check if this hotspot is closer than the current nearest
                             if (distance < nearestDistance) {
@@ -139,22 +147,23 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
                             val latLng = LatLng(hotspot.lat, hotspot.lng)
                             val hotspotMarkerOptions = MarkerOptions()
                                 .position(latLng)
-                                .title(hotspot.locName)
+                                .title("${hotspot.locName} - ${String.format("%.2f", distance)} ${distanceMetric}")
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
                             myMap.addMarker(hotspotMarkerOptions)
                         }
 
-                        this@Nearby.nearestHotspot = nearestHotspot // Set the nearest hotspot
+                        this@Nearby.nearestHotspot = nearestHotspot
                     }
                 }
             }
 
             override fun onFailure(call: Call<List<BirdHotspot>>, t: Throwable) {
-                // Handle failure
+
             }
         })
     }
+
 
 
     private fun showRouteToNearestHotspot() {
@@ -162,16 +171,40 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
             val userLocation = LatLng(myMap.cameraPosition.target.latitude, myMap.cameraPosition.target.longitude)
             val hotspotLocation = LatLng(hotspot.lat, hotspot.lng)
 
+            // Calculate and display the distance to the nearest hotspot
+            val userLocationObj = Location("").apply {
+                latitude = userLocation.latitude
+                longitude = userLocation.longitude
+            }
+            val hotspotLocationObj = Location("").apply {
+                latitude = hotspotLocation.latitude
+                longitude = hotspotLocation.longitude
+            }
+
+            var distance = userLocationObj.distanceTo(hotspotLocationObj).toDouble()
+
+            // Retrieve the saved metric setting
+            val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
+
+            if (distanceMetric == "Miles") {
+                distance /= 1609.34  // Convert meters to miles
+            } else {
+                distance /= 1000  // Convert meters to kilometers
+            }
+
+            Toast.makeText(this, "Nearest Hotspot: ${String.format("%.2f", distance)} $distanceMetric", Toast.LENGTH_LONG).show()
+
             // Call Directions API to get the route
             getDirections(userLocation, hotspotLocation)
         } ?: run {
-            // Show a message if no hotspot is found
             Toast.makeText(this, "No hotspots found nearby", Toast.LENGTH_SHORT).show()
         }
     }
 
+
     private fun getDirections(origin: LatLng, destination: LatLng) {
-        val directionsApiKey = "AIzaSyBFzVMvcUXyJPv-y3EtkJUEBgcwMuxWb1I" // Replace with your Google Directions API key
+        val directionsApiKey = "AIzaSyBFzVMvcUXyJPv-y3EtkJUEBgcwMuxWb1I" //Google directions API
         val url = "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$directionsApiKey"
 
         // Use Retrofit or any HTTP client to fetch the directions

@@ -33,7 +33,7 @@ class SettingsPage : AppCompatActivity() {
             val selectedMetric = when (checkedId) {
                 R.id.radioButton1 -> "Miles"
                 R.id.radioButton2 -> "Kilometers"
-                else -> "Kilometers" // Default
+                else -> "Kilometers" // Default metric
             }
             saveMetric(selectedMetric)
             Toast.makeText(this, "Selected metric: $selectedMetric", Toast.LENGTH_SHORT).show()
@@ -72,21 +72,22 @@ class SettingsPage : AppCompatActivity() {
     private fun saveMetric(metric: String) {
         val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putString("metric", metric) // Save the selected metric
+            putString("distance_metric", metric)
             apply()
         }
     }
 
-    // Load the saved metric from SharedPreferences
+    // Load the saved metric
     private fun loadSavedMetrics() {
         val sharedPreferences = getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-        val metric = sharedPreferences.getString("metric", "Kilometers") // Default to Kilometers
-
-        when (metric) {
-            "Miles" -> binding.radioButton1.isChecked = true
-            "Kilometers" -> binding.radioButton2.isChecked = true
+        val savedMetric = sharedPreferences.getString("distance_metric", "Kilometers")
+        if (savedMetric == "Miles") {
+            binding.radioButton1.isChecked = true
+        } else {
+            binding.radioButton2.isChecked = true
         }
     }
+
 
     fun onClickableTextClick(view: View) {
         Toast.makeText(this, "View Profile button clicked", Toast.LENGTH_SHORT).show()
