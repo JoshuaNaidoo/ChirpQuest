@@ -16,11 +16,12 @@
     <string name="max_distance_hint">0</string>
 
     <string name="google_map_api_key">AIzaSyC1wS5upMIXCW0ogY97-U72flZHJQfc7Ug</string>
+    <string name="google_map_directions_api_key">AIzaSyBFzVMvcUXyJPv-y3EtkJUEBgcwMuxWb1I</string>
     <string name="ebird_api_key">p84spluvlo8a</string>
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
     <string name="findings">Findings</string>
     <string name="menu_create_findings">Create Findings</string>
-
+    <string name="all_findings">All Findings</string>
 
 </resources>

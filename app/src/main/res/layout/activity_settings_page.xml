@@ -234,19 +234,19 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginStart="-100dp" />
 
-            <!--   <EditText
-                   android:id="@+id/NameET"
-                   android:layout_width="292dp"
-                   android:layout_height="49dp"
-                   android:background="@drawable/rounded_edittext"
-                   android:ems="10"
-                   android:inputType="text"
-                   android:text=""
-                   android:textColor="@color/black"
-                   android:textSize="28sp"
-                   app:layout_constraintTop_toBottomOf="@+id/UserName"
-                   tools:ignore="MissingConstraints"
-                   tools:layout_editor_absoluteX="49dp" /> -->
+            <Button
+                android:id="@+id/setButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Set"
+                app:layout_constraintStart_toEndOf="@+id/enterMaxDistance"
+                app:layout_constraintTop_toBottomOf="@+id/maxDistance"
+                android:layout_marginStart="150dp"
+                android:layout_marginTop="16dp"
+                android:textColor="#000000"
+                android:backgroundTint="#A6FF00"/>
+
+
 
 
 

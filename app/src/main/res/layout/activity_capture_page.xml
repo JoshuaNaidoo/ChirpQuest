@@ -65,7 +65,7 @@
                 android:layout_marginTop="72dp"
                 android:background="@drawable/textbox_outline"
                 android:gravity="center"
-                android:hint="DD/MM/YYYY"
+                android:hint="Set date"
                 android:inputType="text"
                 android:textColorHint="#FFFFFF"
                 app:layout_constraintTop_toBottomOf="@+id/speciesText"
@@ -81,7 +81,7 @@
                 android:layout_marginTop="72dp"
                 android:background="@drawable/textbox_outline"
                 android:gravity="center"
-                android:hint="HH/MM"
+                android:hint="Set time"
                 android:inputType="text"
                 android:textColorHint="#FFFFFF"
                 app:layout_constraintTop_toBottomOf="@+id/speciesText"
@@ -97,7 +97,7 @@
                 android:layout_marginTop="28dp"
                 android:background="@drawable/textbox_outline"
                 android:gravity="left"
-                android:hint="Location"
+                android:hint="Set location"
                 android:inputType="text"
                 android:textColorHint="#FFFFFF"
                 app:layout_constraintTop_toBottomOf="@+id/time"
@@ -149,6 +149,18 @@
                 android:layout_marginTop="30dp"
                 app:layout_constraintTop_toBottomOf="@+id/description"
                 android:layout_marginStart="240dp"/>
+
+            <Button
+                android:id="@+id/submitButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Submit"
+                android:textColor="#000000"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/addpictureButton"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:backgroundTint="#A6FF00"/>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>
