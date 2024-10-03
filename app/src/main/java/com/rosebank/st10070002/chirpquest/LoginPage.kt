@@ -75,6 +75,7 @@ class LoginPage : AppCompatActivity()   {
                     fAuth.signInWithEmailAndPassword(it, password).addOnCompleteListener { task ->
                         if (task.isSuccessful) {
                             Toast.makeText(this, "Login successful", Toast.LENGTH_SHORT).show()
+                            intent.putExtra("username", username)
                              startActivity(Intent(this, MainActivity::class.java))
                         } else {
                             Toast.makeText(this, "Login failed: ${task.exception?.message}", Toast.LENGTH_SHORT).show()

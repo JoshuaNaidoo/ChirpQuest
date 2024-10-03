@@ -23,12 +23,13 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
+import androidx.fragment.app.Fragment
 import retrofit2.Response
 import com.google.android.gms.maps.model.PolylineOptions
 import android.graphics.Color
 import android.util.Log
 
-class Nearby : AppCompatActivity(), OnMapReadyCallback {
+class Nearby : AppCompatActivity() , OnMapReadyCallback {
 
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -109,7 +110,7 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
         val radius = 50
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
-            override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
+            override fun onResponse(call: retrofit2.Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { hotspots ->
                         var nearestDistance = Double.MAX_VALUE
@@ -158,7 +159,7 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
                 }
             }
 
-            override fun onFailure(call: Call<List<BirdHotspot>>, t: Throwable) {
+            override fun onFailure(call: retrofit2.Call<List<BirdHotspot>>, t: Throwable) {
 
             }
         })

@@ -21,6 +21,7 @@
     <string name="open">Open Navigation Drawer</string>
     <string name="close">Close Navigation Drawer</string>
     <string name="findings">Findings</string>
+
     <string name="menu_create_findings">Create Findings</string>
     <string name="all_findings">All Findings</string>
 

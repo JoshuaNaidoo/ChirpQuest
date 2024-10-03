@@ -2,16 +2,22 @@ package com.rosebank.st10070002.chirpquest.ui.settings
 
 import android.content.Context
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import com.rosebank.st10070002.chirpquest.R
 import com.rosebank.st10070002.chirpquest.databinding.FragmentSettingsBinding
 
 class SettingsFragment : Fragment() {
 
+    private val fStore = FirebaseFirestore.getInstance()
+    private val fAuth = FirebaseAuth.getInstance()
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
 
@@ -20,6 +26,17 @@ class SettingsFragment : Fragment() {
     ): View {
         _binding = FragmentSettingsBinding.inflate(inflater, container, false)
         val root: View = binding.root
+
+        // Retrieve the current user's ID
+        val userId = fAuth.currentUser?.uid
+
+        if (userId != null) {
+            // Fetch user details from Firestore
+            fetchUserDetails(userId)
+        } else {
+            // Handle the case when user is not logged in
+            Log.e("SettingsFragment", "User not logged in")
+        }
 
         // Load saved metrics setting
         loadSavedMetrics()
@@ -38,7 +55,8 @@ class SettingsFragment : Fragment() {
                 else -> "Kilometers" // Default metric
             }
             saveMetric(selectedMetric)
-            Toast.makeText(requireContext(), "Selected metric: $selectedMetric", Toast.LENGTH_SHORT).show()
+            Toast.makeText(requireContext(), "Selected metric: $selectedMetric", Toast.LENGTH_SHORT)
+                .show()
         }
 
         return root
@@ -95,5 +113,25 @@ class SettingsFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null // Clear binding reference to prevent memory leaks
+    }
+    private fun fetchUserDetails(userId: String) {
+        fStore.collection("users").document(userId).get()
+            .addOnSuccessListener { document ->
+                if (document != null) {
+                    // Assuming the document contains the username field
+                    val username = document.getString("username")
+                    if (username != null) {
+                        // Display the username in the TextView
+                        binding.UserName.text = username
+                    } else {
+                        Log.e("SettingsFragment", "Username not found in Firestore")
+                    }
+                } else {
+                    Log.e("SettingsFragment", "No such document")
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("SettingsFragment", "Error fetching user details: ${e.message}")
+            }
     }
 }

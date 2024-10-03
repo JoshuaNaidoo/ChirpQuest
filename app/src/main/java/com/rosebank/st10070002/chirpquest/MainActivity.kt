@@ -35,6 +35,15 @@ class MainActivity : AppCompatActivity() {
 
         setSupportActionBar(binding.appBarMain.toolbar)
 
+        // Get the username passed from LoginActivity
+        val username = intent.getStringExtra("username")
+
+        // Create the SettingsFragment and pass the username as an argument
+        val fragment = SettingsFragment()
+        val bundle = Bundle()
+        bundle.putString("username", username)
+        fragment.arguments = bundle
+
         // Floating action button setup
         binding.appBarMain.fab.setOnClickListener { view ->
             Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
@@ -90,8 +99,15 @@ class MainActivity : AppCompatActivity() {
                         .commit()
                 }
                 R.id.menu_settings -> {
+                    // Replace fragment with SettingsFragment and pass the username
+                    val settingsFragment = SettingsFragment()
+                    val bundle = Bundle().apply {
+                        putString("username", username) // Pass the username here
+                    }
+                    settingsFragment.arguments = bundle
+
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment_content_main, SettingsFragment())
+                        .replace(R.id.nav_host_fragment_content_main, settingsFragment)
                         .commit()
                 }
                 // Handle other menu items
