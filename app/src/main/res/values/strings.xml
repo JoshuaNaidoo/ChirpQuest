@@ -24,5 +24,6 @@
 
     <string name="menu_create_findings">Create Findings</string>
     <string name="all_findings">All Findings</string>
+    <string name="menu_view_findings">View Findings </string>
 
 </resources>
