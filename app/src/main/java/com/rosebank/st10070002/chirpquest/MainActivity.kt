@@ -15,7 +15,10 @@ import androidx.navigation.ui.setupWithNavController
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.rosebank.st10070002.chirpquest.databinding.ActivityMainBinding
+import com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment
 import com.rosebank.st10070002.chirpquest.ui.home.HomeFragment
+import com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment
+import com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
 
@@ -54,9 +57,10 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_gallery, R.id.nav_slideshow
+                R.id.nav_home, R.id.nav_nearby, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_create_findings, R.id.nav_capture, R.id.nav_settings
             ), drawerLayout
         )
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
@@ -73,6 +77,21 @@ class MainActivity : AppCompatActivity() {
                     // Replace fragment with CreateFindingsFragment
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, CreateFindingsFragment())
+                        .commit()
+                }
+                R.id.menu_nearby -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, NearbyFragment())
+                        .commit()
+                }
+                R.id.menu_capture -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
+                        .commit()
+                }
+                R.id.menu_settings -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, SettingsFragment())
                         .commit()
                 }
                 // Handle other menu items
