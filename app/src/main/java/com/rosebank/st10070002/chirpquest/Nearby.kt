@@ -105,7 +105,7 @@ class Nearby : AppCompatActivity(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
-        val maxResults = 50 //Set the amount of hotspots can appear in the radius
+        val maxResults = 50 //Set the amount of hotspots that can appear in the radius
         val radius = 50
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
