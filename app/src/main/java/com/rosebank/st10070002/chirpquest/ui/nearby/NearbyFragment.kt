@@ -33,14 +33,17 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.util.Log
 import android.provider.Settings
+import com.google.android.gms.maps.model.Polyline
 
 
 class NearbyFragment : Fragment(), OnMapReadyCallback {
 
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+    private var userLatLng: LatLng? = null
 
     private val PERMISSION_REQUEST_LOCATION = 1
+    private var currentPolyline: Polyline? = null
 
     private val retrofit = Retrofit.Builder()
         .baseUrl("https://api.ebird.org/") // Base API url
@@ -96,12 +99,12 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         // Get the user's last known location
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
-                val userLatLng = LatLng(it.latitude, it.longitude)
-                myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng, 12f))
+                userLatLng = LatLng(it.latitude, it.longitude) // Store user's location
+                myMap.moveCamera(CameraUpdateFactory.newLatLngZoom(userLatLng!!, 12f))
 
                 // Add a marker for the user's location
                 val markerOptions = MarkerOptions()
-                    .position(userLatLng)
+                    .position(userLatLng!!)
                     .title("You are here!")
                     .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN))
                 myMap.addMarker(markerOptions)
@@ -109,6 +112,13 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                 // Fetch bird hotspots around the user
                 fetchBirdHotspots(it.latitude, it.longitude)
             }
+        }
+
+        // Set up marker click listener to get route to the clicked hotspot
+        myMap.setOnMarkerClickListener { marker ->
+            val hotspotLatLng = marker.position
+            showRouteToHotspot(hotspotLatLng)
+            true // Return true to indicate that we have consumed the event
         }
     }
 
@@ -136,8 +146,8 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
-        val maxResults = 50 // Set the amount of hotspots that can appear in the radius
-        val radius = 50
+        val maxResults = 50 //Set the amount of hotspots that can appear in the radius
+        val radius = 100
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
             override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
@@ -190,17 +200,14 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: Call<List<BirdHotspot>>, t: Throwable) {
-                // Handle failure
+
             }
         })
     }
-
-    private fun showRouteToNearestHotspot() {
-        nearestHotspot?.let { hotspot ->
-            val userLocation = LatLng(myMap.cameraPosition.target.latitude, myMap.cameraPosition.target.longitude)
-            val hotspotLocation = LatLng(hotspot.lat, hotspot.lng)
-
-            // Calculate and display the distance to the nearest hotspot
+    private fun showRouteToHotspot(hotspotLocation: LatLng) {
+        // Use the stored user location instead of camera position
+        userLatLng?.let { userLocation ->
+            // Calculate and display the distance to the hotspot
             val userLocationObj = Location("").apply {
                 latitude = userLocation.latitude
                 longitude = userLocation.longitude
@@ -222,14 +229,54 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                 distance /= 1000  // Convert meters to kilometers
             }
 
-            Toast.makeText(requireContext(), "Nearest Hotspot: ${String.format("%.2f", distance)} $distanceMetric", Toast.LENGTH_LONG).show()
+            Toast.makeText(requireContext(), "Hotspot: ${String.format("%.2f", distance)} $distanceMetric away", Toast.LENGTH_LONG).show()
 
             // Call Directions API to get the route
             getDirections(userLocation, hotspotLocation)
         } ?: run {
+            Toast.makeText(requireContext(), "Your location is not available", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun showRouteToNearestHotspot() {
+
+        nearestHotspot?.let { hotspot ->
+            // Use the stored user location instead of camera position
+            userLatLng?.let { userLocation ->
+                val hotspotLocation = LatLng(hotspot.lat, hotspot.lng)
+
+                // Calculate and display the distance to the nearest hotspot
+                val userLocationObj = Location("").apply {
+                    latitude = userLocation.latitude
+                    longitude = userLocation.longitude
+                }
+                val hotspotLocationObj = Location("").apply {
+                    latitude = hotspotLocation.latitude
+                    longitude = hotspotLocation.longitude
+                }
+
+                var distance = userLocationObj.distanceTo(hotspotLocationObj).toDouble()
+
+                // Retrieve the saved metric setting
+                val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+                val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
+
+                if (distanceMetric == "Miles") {
+                    distance /= 1609.34  // Convert meters to miles
+                } else {
+                    distance /= 1000  // Convert meters to kilometers
+                }
+
+                Toast.makeText(requireContext(), "Nearest Hotspot: ${String.format("%.2f", distance)} $distanceMetric", Toast.LENGTH_LONG).show()
+
+                // Call Directions API to get the route
+                getDirections(userLocation, hotspotLocation)
+            }
+        } ?: run {
             Toast.makeText(requireContext(), "No hotspots found nearby", Toast.LENGTH_SHORT).show()
         }
     }
+
 
     private fun getDirections(origin: LatLng, destination: LatLng) {
         val directionsApiKey = "AIzaSyBFzVMvcUXyJPv-y3EtkJUEBgcwMuxWb1I" //Google directions API
@@ -253,6 +300,9 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
+
+
+
     private fun drawRoute(directionsResponse: DirectionsResponse) {
         for (route in directionsResponse.routes) {
             val polyline = route.overview_polyline
@@ -268,7 +318,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun decodePolyline(encoded: String): List<LatLng> {
-        val poly: MutableList<LatLng> = ArrayList()
+        val poly = ArrayList<LatLng>()
         var index = 0
         val len = encoded.length
         var lat = 0
@@ -276,27 +326,30 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
         while (index < len) {
             var b: Int
-            var result = 1
-
+            var shift = 0
+            var result = 0
             do {
                 b = encoded[index++].toInt() - 63
-                result = result shl 5 or (b and 0x1F)
+                result = result or (b and 0x1f shl shift)
+                shift += 5
             } while (b >= 0x20)
 
-            val dlat = if (result and 1 != 0) result shr 1 else -result shr 1
+            val dlat = if (result and 1 != 0) (result shr 1).inv() else (result shr 1)
             lat += dlat
 
-            result = 1
+            shift = 0
+            result = 0
             do {
                 b = encoded[index++].toInt() - 63
-                result = result shl 5 or (b and 0x1F)
+                result = result or (b and 0x1f shl shift)
+                shift += 5
             } while (b >= 0x20)
 
-            val dlng = if (result and 1 != 0) result shr 1 else -result shr 1
+            val dlng = if (result and 1 != 0) (result shr 1).inv() else (result shr 1)
             lng += dlng
 
-            val p = LatLng((lat / 1E5), (lng / 1E5))
-            poly.add(p)
+            val latLng = LatLng((lat.toDouble() / 1E5), (lng.toDouble() / 1E5))
+            poly.add(latLng)
         }
 
         return poly
