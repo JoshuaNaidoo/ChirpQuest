@@ -109,7 +109,7 @@ class Nearby : AppCompatActivity() , OnMapReadyCallback {
         val maxResults = 50 //Set the amount of hotspots that can appear in the radius
         val radius = 50
 
-        apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
+        apiService.getBirdHotspots(latitude, longitude, radius,apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
             override fun onResponse(call: retrofit2.Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
                 if (response.isSuccessful) {
                     response.body()?.let { hotspots ->

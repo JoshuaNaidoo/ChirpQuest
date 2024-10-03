@@ -33,6 +33,8 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.util.Log
 import android.provider.Settings
+import android.widget.EditText
+import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.model.Polyline
 
@@ -42,6 +44,8 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var userLatLng: LatLng? = null
+    private var searchRadius: Int = 50 // Default radius in kilometers
+
 
     private val PERMISSION_REQUEST_LOCATION = 1
     private var currentPolyline: Polyline? = null
@@ -69,11 +73,12 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         // Initialize FusedLocationProviderClient
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
+        // Load saved radius from SharedPreferences
+        loadRadius()
+
         // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
-
-
 
         // Set up zoom buttons
         val btnZoomIn: Button = view.findViewById(R.id.btnZoomIn)
@@ -86,6 +91,21 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         val btnShowRoute: Button = view.findViewById(R.id.btnShowRoute2)
         btnShowRoute.setOnClickListener { showRouteToNearestHotspot() }
     }
+
+    private fun loadRadius() {
+        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        searchRadius = sharedPreferences.getInt("search_radius", 50) // Default is 50 km if no value is set
+
+        // Update the EditText to show the current radius as a hint
+        val radiusTextView: EditText? = view?.findViewById(R.id.enterMaxDistance)
+        radiusTextView?.hint = "$searchRadius km" // Update hint with current radius
+
+        // Set the text to display the current radius
+        radiusTextView?.setText(searchRadius.toString())
+    }
+
+
+
 
     override fun onMapReady(@NonNull googleMap: GoogleMap) {
         myMap = googleMap
@@ -176,8 +196,11 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
-        val maxResults = 50 //Set the amount of hotspots that can appear in the radius
-        val radius = 100
+
+        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val radius = sharedPreferences.getInt("search_radius", 50) // Default is 50 km if no value is set
+        val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
+
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
             override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
