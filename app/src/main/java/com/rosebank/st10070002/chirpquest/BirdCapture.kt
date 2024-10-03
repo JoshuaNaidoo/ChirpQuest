@@ -1,11 +1,15 @@
 package com.rosebank.st10070002.chirpquest
 
+//data class BirdCapture(
 data class BirdCapture(
-    val id: String = "",
-    val species: String = "",
-    val date: String = "",
-    val time: String = "",
-    val location: String = "",
-    val description: String? = null,
-    var imageUrl: String? = null
-)
+    var species: String? = null,
+    var date: String? = null,
+    var time: String? = null,
+    var location: String? = null,
+    var description: String? = null,
+    var imageUrl: String? = null,
+    var userId: String? = null
+) {
+    // No-argument constructor for Firestore deserialization
+    constructor() : this(null, null, null, null, null, null, null)
+}

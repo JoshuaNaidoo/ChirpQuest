@@ -26,6 +26,7 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.rosebank.st10070002.chirpquest.R
 import com.rosebank.st10070002.chirpquest.databinding.FragmentCaptureBinding
@@ -38,6 +39,7 @@ class CaptureFragment : Fragment() {
     private var _binding: FragmentCaptureBinding? = null
     private val binding get() = _binding!!
 
+    private lateinit var auth: FirebaseAuth
     private lateinit var firestore: FirebaseFirestore
     private var imageUri: Uri? = null
     private lateinit var fusedLocationClient: FusedLocationProviderClient
@@ -48,6 +50,7 @@ class CaptureFragment : Fragment() {
         _binding = FragmentCaptureBinding.inflate(inflater, container, false)
 
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance() // Initialize FirebaseAuth
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
 
         // Setup button click listeners
@@ -161,39 +164,50 @@ class CaptureFragment : Fragment() {
             }
         }
     }
+private fun submitFinding() {
+    // Get input from EditText fields
+    val species = binding.speciesText.text.toString().trim()
+    val date = binding.date.text.toString().trim()
+    val time = binding.time.text.toString().trim()
+    val location = binding.location.text.toString().trim()
+    val description = binding.description.text.toString().trim()
 
-    private fun submitFinding() {
-        // Get input from EditText fields
-        val species = binding.speciesText.text.toString()
-        val date = binding.date.text.toString()
-        val time = binding.time.text.toString()
-        val location = binding.location.text.toString()
-        val description = binding.description.text.toString()
+    // Get the current user ID
+    val userId = auth.currentUser?.uid ?: return Toast.makeText(
+        requireContext(), "User not logged in", Toast.LENGTH_SHORT
+    ).show()
 
-        // Create a BirdCapture object
-        val birdCapture = BirdCapture(
-            species = species,
-            date = date,
-            time = time,
-            location = location,
-            description = description,
-            imageUrl = imageUri.toString()
-        )
-
-        // Save to Firestore
-        firestore.collection("findings")
-            .add(birdCapture)
-            .addOnSuccessListener {
-                // Handle success
-                Toast.makeText(requireContext(), "Finding added", Toast.LENGTH_SHORT).show()
-                // Clear the fields
-                clearInputFields()
-            }
-            .addOnFailureListener { e ->
-                // Handle failure
-                Toast.makeText(requireContext(), "Error adding finding: ${e.message}", Toast.LENGTH_SHORT).show()
-            }
+    // Validate input fields
+    if (species.isEmpty() || date.isEmpty() || time.isEmpty() || location.isEmpty() || description.isEmpty()) {
+        return Toast.makeText(requireContext(), "Please fill all fields", Toast.LENGTH_SHORT).show()
     }
+
+    // Create a BirdCapture object
+    val birdCapture = BirdCapture(
+        species = species,
+        date = date,
+        time = time,
+        location = location,
+        description = description,
+        imageUrl = imageUri.toString(),
+        userId = userId // Store userId with the capture details
+    )
+
+    // Save to Firestore
+    firestore.collection("findings")
+        .add(birdCapture)
+        .addOnSuccessListener {
+            // Handle success
+            Toast.makeText(requireContext(), "Finding added", Toast.LENGTH_SHORT).show()
+            // Clear the fields
+            clearInputFields()
+        }
+        .addOnFailureListener { e ->
+            // Handle failure
+            Toast.makeText(requireContext(), "Error adding finding: ${e.message}", Toast.LENGTH_SHORT).show()
+        }
+}
+
 
     private fun clearInputFields() {
         binding.speciesText.text.clear()

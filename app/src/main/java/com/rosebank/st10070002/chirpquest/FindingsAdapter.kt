@@ -1,3 +1,4 @@
+
 package com.rosebank.st10070002.chirpquest
 
 import android.view.LayoutInflater
@@ -7,6 +8,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 
 class FindingsAdapter(private var findingsList: MutableList<BirdCapture>) : RecyclerView.Adapter<FindingsAdapter.FindingsViewHolder>() {
 
@@ -27,7 +29,7 @@ class FindingsAdapter(private var findingsList: MutableList<BirdCapture>) : Recy
     fun updateFindings(newFindings: List<BirdCapture>) {
         findingsList.clear()
         findingsList.addAll(newFindings)
-        notifyDataSetChanged()
+        notifyDataSetChanged() // Consider notifying only on specific changes for better performance
     }
 
     class FindingsViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
@@ -43,18 +45,13 @@ class FindingsAdapter(private var findingsList: MutableList<BirdCapture>) : Recy
             timeTextView.text = birdCapture.time
             locationTextView.text = birdCapture.location
 
-            // Load image using Glide
-            val imageUrl = birdCapture.imageUrl
-            if (imageUrl != null) {
-                Glide.with(itemView.context)
-                    .load(imageUrl)
-                    .placeholder(R.drawable.addimagebutton) // Add a placeholder image
-                    .into(imageView)
-            } else {
-                // Set a default placeholder if no image is available
-                imageView.setImageResource(R.drawable.addimagebutton)
-            }
+            // Load image using Glide with error handling
+            Glide.with(itemView.context)
+                .load(birdCapture.imageUrl)
+                .placeholder(R.drawable.addimagebutton) // Add a placeholder image
+                .error(R.drawable.addimagebutton) // Set an error image in case of failure
+                .diskCacheStrategy(DiskCacheStrategy.ALL) // Cache images for better performance
+                .into(imageView)
         }
     }
 }
-

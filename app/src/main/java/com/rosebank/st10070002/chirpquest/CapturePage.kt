@@ -23,12 +23,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import java.util.Calendar
 import java.util.Locale
 
 class CapturePage : AppCompatActivity() {
     private lateinit var firestore: FirebaseFirestore
+    private lateinit var auth: FirebaseAuth
     private var imageUri: Uri? = null // To store the image URI
     private lateinit var fusedLocationClient: FusedLocationProviderClient
 
@@ -37,6 +39,7 @@ class CapturePage : AppCompatActivity() {
         setContentView(R.layout.activity_capture_page)
 
         firestore = FirebaseFirestore.getInstance()
+        auth = FirebaseAuth.getInstance() // Initialize FirebaseAuth
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
         // Setup button click listener
@@ -178,6 +181,10 @@ class CapturePage : AppCompatActivity() {
         val location = findViewById<EditText>(R.id.location).text.toString()
         val description = findViewById<EditText>(R.id.description).text.toString()
 
+        // Get the current user ID
+        val userId = auth.currentUser?.uid ?: return Toast.makeText(this, "User not logged in", Toast.LENGTH_SHORT
+        ).show()
+
         // Create a BirdCapture object
         val birdCapture = BirdCapture(
             species = species,
@@ -185,7 +192,8 @@ class CapturePage : AppCompatActivity() {
             time = time,
             location = location,
             description = description,
-            imageUrl = imageUri.toString()
+            imageUrl = imageUri.toString(),
+            userId = userId // Store userId with the capture details
         )
 
         // Save to Firestore
