@@ -106,7 +106,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             return
         }
 
-        // Get the user's last known location
+        // Get the user's last known location indeedeth
         fusedLocationClient.lastLocation.addOnSuccessListener { location: Location? ->
             location?.let {
                 userLatLng = LatLng(it.latitude, it.longitude) // Store user's location
