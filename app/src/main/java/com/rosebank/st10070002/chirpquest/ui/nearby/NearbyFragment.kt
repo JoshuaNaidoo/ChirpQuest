@@ -1,14 +1,17 @@
-package com.rosebank.st10070002.chirpquest.ui.nearby
+package com.rosebank.st10070002.chirpquest
 
 import android.Manifest
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.Toast
+import androidx.annotation.NonNull
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -20,77 +23,73 @@ import com.google.android.gms.maps.SupportMapFragment
 import com.google.android.gms.maps.model.BitmapDescriptorFactory
 import com.google.android.gms.maps.model.LatLng
 import com.google.android.gms.maps.model.MarkerOptions
-import com.rosebank.st10070002.chirpquest.R
-import com.rosebank.st10070002.chirpquest.databinding.FragmentNearbyBinding
+import com.google.android.gms.maps.model.PolylineOptions
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import android.graphics.Color
+import android.location.LocationManager
 import android.util.Log
-import com.google.android.gms.maps.model.PolylineOptions
-import com.rosebank.st10070002.chirpquest.DirectionsResponse
-import com.rosebank.st10070002.chirpquest.DirectionsService
-import com.rosebank.st10070002.chirpquest.BirdHotspot
-import com.rosebank.st10070002.chirpquest.BirdHotspotService
-
+import android.provider.Settings
 
 
 class NearbyFragment : Fragment(), OnMapReadyCallback {
 
-    private var _binding: FragmentNearbyBinding? = null
-    private val binding get() = _binding!!
-
     private lateinit var myMap: GoogleMap
     private lateinit var fusedLocationClient: FusedLocationProviderClient
+
+    private val PERMISSION_REQUEST_LOCATION = 1
+
     private val retrofit = Retrofit.Builder()
-        .baseUrl("https://api.ebird.org/")
+        .baseUrl("https://api.ebird.org/") // Base API url
         .addConverterFactory(GsonConverterFactory.create())
         .build()
+
     private val apiService: BirdHotspotService = retrofit.create(BirdHotspotService::class.java)
-    private var currentZoomLevel: Float = 12f
-    private var nearestHotspot: BirdHotspot? = null
+    private var currentZoomLevel: Float = 12f // Starting zoom level
+    private var nearestHotspot: BirdHotspot? = null // Store the nearest hotspot
 
     override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
-    ): View {
-        _binding = FragmentNearbyBinding.inflate(inflater, container, false)
-        return binding.root
+        inflater: LayoutInflater, container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        // Inflate the layout for this fragment
+        return inflater.inflate(R.layout.fragment_nearby, container, false)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         // Initialize FusedLocationProviderClient
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireActivity())
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(requireContext())
 
-        // Set up map fragment
+        // Get the SupportMapFragment and request notification when the map is ready to be used.
         val mapFragment = childFragmentManager.findFragmentById(R.id.mapFragment) as SupportMapFragment
         mapFragment.getMapAsync(this)
 
+
+
         // Set up zoom buttons
-        binding.btnZoomIn.setOnClickListener { zoomIn() }
-        binding.btnZoomOut.setOnClickListener { zoomOut() }
+        val btnZoomIn: Button = view.findViewById(R.id.btnZoomIn)
+        val btnZoomOut: Button = view.findViewById(R.id.btnZoomOut)
+
+        btnZoomIn.setOnClickListener { zoomIn() }
+        btnZoomOut.setOnClickListener { zoomOut() }
 
         // Button to show route to the nearest hotspot
-        binding.btnShowRoute.setOnClickListener { showRouteToNearestHotspot() }
+        val btnShowRoute: Button = view.findViewById(R.id.btnShowRoute2)
+        btnShowRoute.setOnClickListener { showRouteToNearestHotspot() }
     }
 
-    override fun onMapReady(googleMap: GoogleMap) {
+    override fun onMapReady(@NonNull googleMap: GoogleMap) {
         myMap = googleMap
 
         // Check for location permissions
-        if (ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_FINE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(
-                requireContext(),
-                Manifest.permission.ACCESS_COARSE_LOCATION
-            ) != PackageManager.PERMISSION_GRANTED
-        ) {
-            requestPermissions(arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
             return
         }
 
@@ -113,6 +112,18 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         }
     }
 
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+        if (requestCode == 1) {
+            if (grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                // Permission granted, try to get the location again
+                onMapReady(myMap)
+            }
+        }
+    }
+
+
     private fun zoomIn() {
         currentZoomLevel += 1f
         myMap.animateCamera(CameraUpdateFactory.zoomTo(currentZoomLevel))
@@ -125,7 +136,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
-        val maxResults = 50
+        val maxResults = 50 // Set the amount of hotspots that can appear in the radius
         val radius = 50
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
@@ -134,7 +145,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                     response.body()?.let { hotspots ->
                         var nearestDistance = Double.MAX_VALUE
                         var nearestHotspot: BirdHotspot? = null
-                        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+                        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
                         val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
 
                         for (hotspot in hotspots) {
@@ -147,23 +158,27 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                                 this.longitude = longitude
                             }
 
+                            // Calculate the distance in meters
                             var distance = userLocation.distanceTo(hotspotLocation).toDouble()
 
+                            // Convert the distance to kilometers or miles based on the setting
                             if (distanceMetric == "Miles") {
                                 distance /= 1609.34  // Convert meters to miles
                             } else {
                                 distance /= 1000 // Convert meters to kilometers
                             }
 
+                            // Check if this hotspot is closer than the current nearest
                             if (distance < nearestDistance) {
                                 nearestDistance = distance
                                 nearestHotspot = hotspot
                             }
 
+                            // Add the hotspot marker
                             val latLng = LatLng(hotspot.lat, hotspot.lng)
                             val hotspotMarkerOptions = MarkerOptions()
                                 .position(latLng)
-                                .title("${hotspot.locName} - ${String.format("%.2f", distance)} $distanceMetric")
+                                .title("${hotspot.locName} - ${String.format("%.2f", distance)} ${distanceMetric}")
                                 .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
 
                             myMap.addMarker(hotspotMarkerOptions)
@@ -185,6 +200,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             val userLocation = LatLng(myMap.cameraPosition.target.latitude, myMap.cameraPosition.target.longitude)
             val hotspotLocation = LatLng(hotspot.lat, hotspot.lng)
 
+            // Calculate and display the distance to the nearest hotspot
             val userLocationObj = Location("").apply {
                 latitude = userLocation.latitude
                 longitude = userLocation.longitude
@@ -196,17 +212,19 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
             var distance = userLocationObj.distanceTo(hotspotLocationObj).toDouble()
 
-            val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+            // Retrieve the saved metric setting
+            val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
             val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
 
             if (distanceMetric == "Miles") {
-                distance /= 1609.34
+                distance /= 1609.34  // Convert meters to miles
             } else {
-                distance /= 1000
+                distance /= 1000  // Convert meters to kilometers
             }
 
             Toast.makeText(requireContext(), "Nearest Hotspot: ${String.format("%.2f", distance)} $distanceMetric", Toast.LENGTH_LONG).show()
 
+            // Call Directions API to get the route
             getDirections(userLocation, hotspotLocation)
         } ?: run {
             Toast.makeText(requireContext(), "No hotspots found nearby", Toast.LENGTH_SHORT).show()
@@ -250,7 +268,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
     }
 
     private fun decodePolyline(encoded: String): List<LatLng> {
-        val poly = ArrayList<LatLng>()
+        val poly: MutableList<LatLng> = ArrayList()
         var index = 0
         val len = encoded.length
         var lat = 0
@@ -258,37 +276,31 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
         while (index < len) {
             var b: Int
-            var shift = 0
-            var result = 0
+            var result = 1
+
             do {
                 b = encoded[index++].toInt() - 63
-                result = result or (b and 0x1f shl shift)
-                shift += 5
+                result = result shl 5 or (b and 0x1F)
             } while (b >= 0x20)
 
-            val dlat = if (result and 1 != 0) (result shr 1).inv() else (result shr 1)
+            val dlat = if (result and 1 != 0) result shr 1 else -result shr 1
             lat += dlat
 
-            shift = 0
-            result = 0
+            result = 1
             do {
                 b = encoded[index++].toInt() - 63
-                result = result or (b and 0x1f shl shift)
-                shift += 5
+                result = result shl 5 or (b and 0x1F)
             } while (b >= 0x20)
 
-            val dlng = if (result and 1 != 0) (result shr 1).inv() else (result shr 1)
+            val dlng = if (result and 1 != 0) result shr 1 else -result shr 1
             lng += dlng
 
-            val latLng = LatLng((lat.toDouble() / 1E5), (lng.toDouble() / 1E5))
-            poly.add(latLng)
+            val p = LatLng((lat / 1E5), (lng / 1E5))
+            poly.add(p)
         }
 
         return poly
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        _binding = null
-    }
+
 }

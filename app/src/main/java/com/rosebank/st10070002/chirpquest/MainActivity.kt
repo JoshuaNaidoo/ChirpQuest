@@ -17,7 +17,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.rosebank.st10070002.chirpquest.databinding.ActivityMainBinding
 import com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment
 import com.rosebank.st10070002.chirpquest.ui.home.HomeFragment
-import com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment
+
 import com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment
 
 class MainActivity : AppCompatActivity() {
