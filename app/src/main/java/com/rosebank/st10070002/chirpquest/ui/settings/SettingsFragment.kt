@@ -6,6 +6,8 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
 import android.widget.TextView
 import android.widget.Toast
 import androidx.fragment.app.Fragment
@@ -20,6 +22,7 @@ class SettingsFragment : Fragment() {
     private val fAuth = FirebaseAuth.getInstance()
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
+    private var searchRadius: Int = 50 // Default value
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -40,6 +43,7 @@ class SettingsFragment : Fragment() {
 
         // Load saved metrics setting
         loadSavedMetrics()
+        loadRadius() // Load the saved radius
 
         // Listener for the distance setting
         binding.enterMaxDistance.setOnEditorActionListener { textView, actionId, keyEvent ->
@@ -59,7 +63,23 @@ class SettingsFragment : Fragment() {
                 .show()
         }
 
+        // Add listener for the setButton click
+        binding.setButton.setOnClickListener {
+            handleDistanceInput() // Or perform any other action you'd like on button click
+            Toast.makeText(requireContext(), "Set Button Clicked", Toast.LENGTH_SHORT).show()
+        }
+
         return root
+    }
+
+    // Load the saved search radius
+    private fun loadRadius() {
+        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        searchRadius = sharedPreferences.getInt("search_radius", 50) // Default is 50 km if no value is set
+
+        // Update the EditText to show the current radius
+        binding.enterMaxDistance.setText(searchRadius.toString()) // Set the current radius
+        binding.enterMaxDistance.hint = "$searchRadius km" // Update hint with current radius
     }
 
     private fun handleDistanceInput() {
@@ -73,19 +93,18 @@ class SettingsFragment : Fragment() {
             } else {
                 // Save the max distance in SharedPreferences
                 saveRadius(maxDistance)
+                binding.enterMaxDistance.hint = "$maxDistance km" // Update the hint
                 Toast.makeText(requireContext(), "Max distance saved: $maxDistance km", Toast.LENGTH_SHORT).show()
-                // Optionally navigate back or do any other action
             }
         } else {
             Toast.makeText(requireContext(), "Please enter a valid distance", Toast.LENGTH_SHORT).show()
         }
     }
 
-    // Function to save the radius in SharedPreferences
     private fun saveRadius(radius: Int) {
         val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putInt("radius", radius) // Save the radius
+            putInt("search_radius", radius) // Use the correct key
             apply()
         }
     }
@@ -114,6 +133,7 @@ class SettingsFragment : Fragment() {
         super.onDestroyView()
         _binding = null // Clear binding reference to prevent memory leaks
     }
+
     private fun fetchUserDetails(userId: String) {
         fStore.collection("users").document(userId).get()
             .addOnSuccessListener { document ->
