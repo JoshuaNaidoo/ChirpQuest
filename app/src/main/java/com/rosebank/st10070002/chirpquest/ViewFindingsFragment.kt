@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.firebase.firestore.FirebaseFirestore
 
-class ListFindingsFragment : Fragment() {
+class ViewFindingsFragment : Fragment() {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var findingsAdapter: FindingsAdapter
@@ -19,34 +19,38 @@ class ListFindingsFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        val view = inflater.inflate(R.layout.fragment_findings_listing, container, false)
+        // Inflate the layout for this fragment
+        val view = inflater.inflate(R.layout.fragment_view_findings, container, false)
 
         firestore = FirebaseFirestore.getInstance()
         recyclerView = view.findViewById(R.id.findingsRecyclerView)
         recyclerView.layoutManager = LinearLayoutManager(requireContext())
 
-        loadFindings()
+        // Initialize the adapter with an empty list and set it to the RecyclerView
+        findingsAdapter = FindingsAdapter(mutableListOf())
+        recyclerView.adapter = findingsAdapter
+
+        // Fetch findings from Firestore
+        fetchFindings()
 
         return view
     }
 
-    private fun loadFindings() {
+    private fun fetchFindings() {
         firestore.collection("findings")
             .get()
-            .addOnSuccessListener { documents ->
-                val findingsList = mutableListOf<BirdCapture>()
-                for (document in documents) {
-                    val species = document.getString("species") ?: ""
-                    val description = document.getString("description") ?: ""
-                    val photoUri = document.getString("photoUri") ?: ""
-                    val isFavorite = document.getBoolean("isFavorite") ?: false
-
+            .addOnSuccessListener { querySnapshot ->
+                val findingsList = querySnapshot.toObjects(BirdCapture::class.java)
+                if (findingsList.isNotEmpty()) {
+                    findingsAdapter.updateFindings(findingsList)
+                } else {
+                    // Handle empty data, if needed
+                    // Example: Show a message or placeholder
                 }
-                findingsAdapter = FindingsAdapter(findingsList)
-                recyclerView.adapter = findingsAdapter
             }
             .addOnFailureListener { e ->
-                // Handle the error
+                // Handle failure (e.g., show a Toast or log the error)
+                // Log.e("ViewFindingsFragment", "Error fetching findings", e)
             }
     }
 }

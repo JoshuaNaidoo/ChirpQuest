@@ -28,10 +28,10 @@
         android:label="menu_nearby"
         tools:layout="@layout/fragment_nearby" />
     <fragment
-        android:id="@+id/nav_create_findings"
-        android:name="com.rosebank.st10070002.chirpquest.CreateFindingsFragment"
-        android:label="@string/menu_create_findings"
-        tools:layout="@layout/fragment_create_findings" />
+        android:id="@+id/nav_ViewFindingsFragment"
+        android:name="com.rosebank.st10070002.chirpquest.ViewFindingsFragment"
+        android:label="@string/menu_view_findings"
+        tools:layout="@layout/fragment_view_findings" />
     <fragment
         android:id="@+id/nav_capture"
         android:name="com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment"

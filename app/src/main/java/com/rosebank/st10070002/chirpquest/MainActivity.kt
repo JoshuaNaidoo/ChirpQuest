@@ -66,7 +66,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_nearby, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_create_findings, R.id.nav_capture, R.id.nav_settings
+                R.id.nav_home, R.id.nav_nearby, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_ViewFindingsFragment, R.id.nav_capture, R.id.nav_settings
             ), drawerLayout
         )
 
@@ -85,7 +85,7 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_findings -> {
                     // Replace fragment with CreateFindingsFragment
                     supportFragmentManager.beginTransaction()
-                        .replace(R.id.nav_host_fragment_content_main, CreateFindingsFragment())
+                        .replace(R.id.nav_host_fragment_content_main, ViewFindingsFragment())
                         .commit()
                 }
                 R.id.menu_nearby -> {

@@ -69,6 +69,7 @@
             android:theme="@style/Theme.ChirpQuest.NoActionBar">
         </activity>
 
+        <activity android:name=".ViewFindingsFragment" />
 
         <activity
             android:name=".SettingsPage"
