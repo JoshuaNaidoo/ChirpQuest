@@ -33,6 +33,7 @@ import android.graphics.Color
 import android.location.LocationManager
 import android.util.Log
 import android.provider.Settings
+import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.model.Polyline
 
 
@@ -89,10 +90,19 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
     override fun onMapReady(@NonNull googleMap: GoogleMap) {
         myMap = googleMap
 
+        // Check if location services are enabled
+        if (!isLocationEnabled(requireContext())) {
+            // Show dialog to enable location services
+            showEnableLocationDialog()
+            return // Exit to avoid requesting permissions if services are not enabled
+        }
+
         // Check for location permissions
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+
+            // Request permissions
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), PERMISSION_REQUEST_LOCATION)
             return
         }
 
@@ -121,6 +131,26 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             true // Return true to indicate that we have consumed the event
         }
     }
+
+    private fun isLocationEnabled(context: Context): Boolean {
+        val locationManager = context.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
+    }
+
+    private fun showEnableLocationDialog() {
+        AlertDialog.Builder(requireContext())
+            .setTitle("Enable Location Services")
+            .setMessage("Please enable location services to use this feature.")
+            .setPositiveButton("Settings") { _, _ ->
+                // Open location settings
+                val intent = Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+                startActivity(intent)
+            }
+            .setNegativeButton("Cancel") { dialog, _ -> dialog.dismiss() }
+            .create()
+            .show()
+    }
+
 
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
@@ -279,6 +309,9 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
 
 
     private fun getDirections(origin: LatLng, destination: LatLng) {
+
+        clearRoute()
+
         val directionsApiKey = "AIzaSyBFzVMvcUXyJPv-y3EtkJUEBgcwMuxWb1I" //Google directions API
         val url = "https://maps.googleapis.com/maps/api/directions/json?origin=${origin.latitude},${origin.longitude}&destination=${destination.latitude},${destination.longitude}&key=$directionsApiKey"
 
@@ -300,22 +333,26 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         })
     }
 
-
+    private fun clearRoute() {
+        currentPolyline?.remove() // Remove the existing polyline from the map
+        currentPolyline = null // Clear the reference
+    }
 
 
     private fun drawRoute(directionsResponse: DirectionsResponse) {
         for (route in directionsResponse.routes) {
             val polyline = route.overview_polyline
             if (polyline != null) { // Check if polyline is not null
-                val polylineOptions = PolylineOptions().width(10f).color(android.graphics.Color.BLUE)
+                val polylineOptions = PolylineOptions().width(10f).color(Color.BLUE)
                 val points = decodePolyline(polyline.points) // Ensure polyline.points is accessible
                 polylineOptions.addAll(points)
-                myMap.addPolyline(polylineOptions)
+                currentPolyline = myMap.addPolyline(polylineOptions) // Update currentPolyline here
             } else {
                 Log.e("Nearby", "Polyline is null for route: $route")
             }
         }
     }
+
 
     private fun decodePolyline(encoded: String): List<LatLng> {
         val poly = ArrayList<LatLng>()
