@@ -1,18 +1,28 @@
 package com.rosebank.st10070002.chirpquest.ui.settings
 
+import android.app.Activity
 import android.content.Context
+import android.content.Intent
+import android.graphics.Bitmap
+import android.net.Uri
 import android.os.Bundle
+import android.provider.MediaStore
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import com.bumptech.glide.Glide
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import com.rosebank.st10070002.chirpquest.R
 import com.rosebank.st10070002.chirpquest.databinding.FragmentSettingsBinding
 
@@ -20,9 +30,12 @@ class SettingsFragment : Fragment() {
 
     private val fStore = FirebaseFirestore.getInstance()
     private val fAuth = FirebaseAuth.getInstance()
+    private val fStorage = FirebaseStorage.getInstance()
     private var _binding: FragmentSettingsBinding? = null
     private val binding get() = _binding!!
     private var searchRadius: Int = 50 // Default value
+    private val imageRequestCode = 100 // Request code for image selection
+    private var imageUri: Uri? = null // URI for the selected image
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
@@ -36,6 +49,8 @@ class SettingsFragment : Fragment() {
         if (userId != null) {
             // Fetch user details from Firestore
             fetchUserDetails(userId)
+            // Load user profile pictures
+            loadProfilePictures(userId)
         } else {
             // Handle the case when user is not logged in
             Log.e("SettingsFragment", "User not logged in")
@@ -44,6 +59,11 @@ class SettingsFragment : Fragment() {
         // Load saved metrics setting
         loadSavedMetrics()
         loadRadius() // Load the saved radius
+
+        // Set up ImageButton for profile picture
+        binding.profilepictureButton.setOnClickListener {
+            selectImage()
+        }
 
         // Listener for the distance setting
         binding.enterMaxDistance.setOnEditorActionListener { textView, actionId, keyEvent ->
@@ -65,11 +85,88 @@ class SettingsFragment : Fragment() {
 
         // Add listener for the setButton click
         binding.setButton.setOnClickListener {
-            handleDistanceInput() // Or perform any other action you'd like on button click
+            handleDistanceInput()
             Toast.makeText(requireContext(), "Set Button Clicked", Toast.LENGTH_SHORT).show()
         }
 
         return root
+    }
+
+    // Load profile pictures from Firestore
+    private fun loadProfilePictures(userId: String) {
+        fStore.collection("users").document(userId).collection("profilePictures")
+            .get()
+            .addOnSuccessListener { documents ->
+                for (document in documents) {
+                    val imageUrl = document.getString("imageUrl")
+                    // Load the image into an ImageButton
+                    imageUrl?.let { loadImage(it) }
+                }
+            }
+            .addOnFailureListener { e ->
+                Log.e("SettingsFragment", "Error loading profile pictures: ${e.message}")
+            }
+    }
+
+    // Function to load image using Glide
+    private fun loadImage(imageUrl: String) {
+
+        Glide.with(this)
+            .load(imageUrl) // Load the image from the URL
+            .placeholder(R.drawable.profilepicture)
+            .error(R.drawable.profilepicture)
+            .into(binding.profilepictureButton) // Display the image in the ImageButton
+    }
+
+
+    // Select image from gallery or camera
+    private fun selectImage() {
+        val intent = Intent(Intent.ACTION_PICK, MediaStore.Images.Media.EXTERNAL_CONTENT_URI)
+        imageLauncher.launch(intent)
+    }
+
+    // Image launcher to handle the result of the image selection
+    private val imageLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            if (result.resultCode == Activity.RESULT_OK) {
+                val data: Intent? = result.data
+                data?.let {
+                    imageUri = it.data
+                    // Upload image to Firebase
+                    uploadImageToFirebase(imageUri)
+                }
+            }
+        }
+
+    // Function to upload image to Firebase
+    private fun uploadImageToFirebase(imageUri: Uri?) {
+        val userId = fAuth.currentUser?.uid ?: return
+
+        imageUri?.let { uri ->
+            val storageRef = fStorage.reference.child("profilePictures/$userId/${System.currentTimeMillis()}.jpg")
+            storageRef.putFile(uri)
+                .addOnSuccessListener {
+                    storageRef.downloadUrl.addOnSuccessListener { downloadUrl ->
+                        saveImageUrlToFirestore(userId, downloadUrl.toString())
+                    }
+                }
+                .addOnFailureListener { e ->
+                    Log.e("SettingsFragment", "Error uploading image: ${e.message}")
+                }
+        }
+    }
+
+    // Function to save image URL to Firestore
+    private fun saveImageUrlToFirestore(userId: String, imageUrl: String) {
+        fStore.collection("users").document(userId).collection("profilePictures")
+            .add(mapOf("imageUrl" to imageUrl))
+            .addOnSuccessListener {
+                Toast.makeText(requireContext(), "Image uploaded successfully!", Toast.LENGTH_SHORT).show()
+                loadProfilePictures(userId) // Reload the pictures after upload
+            }
+            .addOnFailureListener { e ->
+                Log.e("SettingsFragment", "Error saving image URL: ${e.message}")
+            }
     }
 
     // Load the saved search radius
@@ -101,10 +198,11 @@ class SettingsFragment : Fragment() {
         }
     }
 
+    // In SettingsFragment
     private fun saveRadius(radius: Int) {
-        val sharedPreferences = requireActivity().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
+        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         with(sharedPreferences.edit()) {
-            putInt("search_radius", radius) // Use the correct key
+            putInt("search_radius", radius) // Save the new radius
             apply()
         }
     }
@@ -144,10 +242,10 @@ class SettingsFragment : Fragment() {
                         // Display the username in the TextView
                         binding.UserName.text = username
                     } else {
-                        Log.e("SettingsFragment", "Username not found in Firestore")
+                        Log.e("SettingsFragment", "Username not found in document.")
                     }
                 } else {
-                    Log.e("SettingsFragment", "No such document")
+                    Log.e("SettingsFragment", "No such document.")
                 }
             }
             .addOnFailureListener { e ->
