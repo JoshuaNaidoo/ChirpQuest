@@ -39,12 +39,12 @@
         tools:layout="@layout/fragment_capture" />
     <fragment
         android:id="@+id/nav_findings_listing"
-        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:name="com.rosebank.st10070002.chirpquest.ui.FindingsListing.FindingsListingFragment"
         android:label="menu_findings_listing"
         tools:layout="@layout/fragment_findings_listing" />
     <fragment
         android:id="@+id/nav_flock"
-        android:name="com.rosebank.st10070002.chirpquest.ui.slideshow.SlideshowFragment"
+        android:name="com.rosebank.st10070002.chirpquest.ui.flock.FlockFragment"
         android:label="menu_flock"
         tools:layout="@layout/fragment_flock" />
     <fragment
@@ -52,4 +52,9 @@
         android:name="com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment"
         android:label="menu_settings"
         tools:layout="@layout/fragment_settings" />
+    <fragment
+        android:id="@+id/nav_logout"
+        android:name="com.rosebank.st10070002.chirpquest.ui.logout.LogoutFragment"
+        android:label="menu_logout"
+        tools:layout="@layout/activity_login_page" />
 </navigation>

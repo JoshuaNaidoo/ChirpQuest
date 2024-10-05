@@ -40,11 +40,7 @@
         android:paddingRight="22dp"
         android:paddingTop="8dp"
         android:paddingBottom="8dp">
-        <TextView
-            android:id="@+id/textHome"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="This is home Fragment" />
+
         <Button
             android:id="@+id/home_Nearby_Btn"
             android:layout_width="match_parent"
@@ -53,6 +49,7 @@
             android:paddingBottom="6dp"
             android:text="Nearby"
             android:textColor="@color/black"
+            android:onClick="nearbyButtonClick"
             android:backgroundTint="#A6FF00" />
 
         <Button
@@ -62,6 +59,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:text="Capture"
+            android:onClick="captureButtonClick"
             android:textColor="@color/black"
             android:backgroundTint="#A6FF00" />
 
@@ -72,6 +70,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:text="Findings"
+            android:onClick="findingsButtonClick"
             android:textColor="@color/black"
             android:backgroundTint="#A6FF00" />
 
@@ -82,6 +81,7 @@
             android:paddingTop="6dp"
             android:paddingBottom="6dp"
             android:text="Flock"
+            android:onClick="flockButtonClick"
             android:textColor="@color/black"
             android:backgroundTint="#A6FF00" />
 

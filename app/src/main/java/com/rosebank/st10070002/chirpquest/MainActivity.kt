@@ -16,7 +16,9 @@ import androidx.drawerlayout.widget.DrawerLayout
 import androidx.appcompat.app.AppCompatActivity
 import com.rosebank.st10070002.chirpquest.databinding.ActivityMainBinding
 import com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment
+import com.rosebank.st10070002.chirpquest.ui.flock.FlockFragment
 import com.rosebank.st10070002.chirpquest.ui.home.HomeFragment
+import com.rosebank.st10070002.chirpquest.ui.logout.LogoutFragment
 
 import com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment
 
@@ -66,7 +68,7 @@ class MainActivity : AppCompatActivity() {
         // menu should be considered as top level destinations.
         appBarConfiguration = AppBarConfiguration(
             setOf(
-                R.id.nav_home, R.id.nav_nearby, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_ViewFindingsFragment, R.id.nav_capture, R.id.nav_settings
+                R.id.nav_home, R.id.nav_nearby, R.id.nav_gallery, R.id.nav_slideshow, R.id.nav_findings_listing, R.id.nav_flock, R.id.nav_ViewFindingsFragment, R.id.nav_capture, R.id.nav_settings, R.id.nav_logout
             ), drawerLayout
         )
 
@@ -96,6 +98,16 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_capture -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
+                        .commit()
+                }
+                R.id.menu_flock -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, FlockFragment())
+                        .commit()
+                }
+                R.id.menu_logout -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, LogoutFragment())
                         .commit()
                 }
                 R.id.menu_settings -> {
