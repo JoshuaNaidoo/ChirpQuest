@@ -25,6 +25,7 @@ class HomeFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_home,container,false)
 
         return root
+
     }
 }
 

@@ -2,11 +2,50 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    xmlns:tools="http://schemas.android.com/tools"
+    android:orientation="vertical"
+    android:background="#303030"
+    android:padding="0dp"
+    tools:context=".FlockFragment">
 
-    <TextView
-        android:layout_width="wrap_content"
+
+    <!-- Header with Hamburger Menu and Title -->
+    <LinearLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Flock Fragment"/>
+        android:orientation="horizontal"
+        android:background="#bfff00"
+        android:padding="16dp">
+
+        <!-- Menu Icon -->
+        <ImageView
+            android:id="@+id/menuIcon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_gravity="center_vertical" />
+
+        <!-- Title -->
+        <TextView
+            android:id="@+id/flockTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Community"
+            android:textSize="24sp"
+            android:textColor="#000000"
+            android:textStyle="bold"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="16dp" />
+
+    </LinearLayout>
+
+    <!-- RecyclerView for displaying bird posts -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/flockRecyclerView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_margin="8dp"
+        android:scrollbars="vertical"
+        android:padding="4dp"/>
 
 </LinearLayout>

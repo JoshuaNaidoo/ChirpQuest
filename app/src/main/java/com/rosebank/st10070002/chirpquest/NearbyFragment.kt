@@ -34,7 +34,6 @@ import android.location.LocationManager
 import android.util.Log
 import android.provider.Settings
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.model.Polyline
 
@@ -96,13 +95,18 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
         val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         searchRadius = sharedPreferences.getInt("search_radius", 50) // Default is 50 km if no value is set
 
-        // Update the EditText to show the current radius as a hint
-        val radiusTextView: EditText? = view?.findViewById(R.id.enterMaxDistance)
-        radiusTextView?.hint = "$searchRadius km" // Update hint with current radius
 
-        // Set the text to display the current radius
+        val radiusTextView: EditText? = view?.findViewById(R.id.enterMaxDistance)
+        radiusTextView?.hint = "$searchRadius km"
         radiusTextView?.setText(searchRadius.toString())
+
+
+        userLatLng?.let { latLng ->
+            fetchBirdHotspots(latLng.latitude, latLng.longitude) // Re-fetch based on updated radius
+        }
     }
+
+
 
 
 
@@ -171,8 +175,6 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             .show()
     }
 
-
-
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if (requestCode == 1) {
@@ -182,7 +184,6 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             }
         }
     }
-
 
     private fun zoomIn() {
         currentZoomLevel += 1f
@@ -197,10 +198,10 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
     private fun fetchBirdHotspots(latitude: Double, longitude: Double) {
         val apiKey = "p84spluvlo8a"
 
+        // Load the search radius from SharedPreferences
         val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
         val radius = sharedPreferences.getInt("search_radius", 50) // Default is 50 km if no value is set
         val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
-
 
         apiService.getBirdHotspots(latitude, longitude, apiKey = apiKey).enqueue(object : Callback<List<BirdHotspot>> {
             override fun onResponse(call: Call<List<BirdHotspot>>, response: Response<List<BirdHotspot>>) {
@@ -208,8 +209,6 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                     response.body()?.let { hotspots ->
                         var nearestDistance = Double.MAX_VALUE
                         var nearestHotspot: BirdHotspot? = null
-                        val sharedPreferences = requireContext().getSharedPreferences("app_preferences", Context.MODE_PRIVATE)
-                        val distanceMetric = sharedPreferences.getString("distance_metric", "Kilometers")
 
                         for (hotspot in hotspots) {
                             val hotspotLocation = Location("").apply {
@@ -231,20 +230,23 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
                                 distance /= 1000 // Convert meters to kilometers
                             }
 
-                            // Check if this hotspot is closer than the current nearest
-                            if (distance < nearestDistance) {
-                                nearestDistance = distance
-                                nearestHotspot = hotspot
+                            // Check if this hotspot is within the specified radius
+                            if (distance <= radius) {
+                                // Add the hotspot marker
+                                val latLng = LatLng(hotspot.lat, hotspot.lng)
+                                val hotspotMarkerOptions = MarkerOptions()
+                                    .position(latLng)
+                                    .title("${hotspot.locName} - ${String.format("%.2f", distance)} ${distanceMetric}")
+                                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
+
+                                myMap.addMarker(hotspotMarkerOptions)
+
+                                // Check if this hotspot is closer than the current nearest
+                                if (distance < nearestDistance) {
+                                    nearestDistance = distance
+                                    nearestHotspot = hotspot
+                                }
                             }
-
-                            // Add the hotspot marker
-                            val latLng = LatLng(hotspot.lat, hotspot.lng)
-                            val hotspotMarkerOptions = MarkerOptions()
-                                .position(latLng)
-                                .title("${hotspot.locName} - ${String.format("%.2f", distance)} ${distanceMetric}")
-                                .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_BLUE))
-
-                            myMap.addMarker(hotspotMarkerOptions)
                         }
 
                         this@NearbyFragment.nearestHotspot = nearestHotspot
@@ -253,10 +255,12 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: Call<List<BirdHotspot>>, t: Throwable) {
-
+                // Handle failure
+                Log.e("NearbyFragment", "Error fetching hotspots", t)
             }
         })
     }
+
     private fun showRouteToHotspot(hotspotLocation: LatLng) {
         // Use the stored user location instead of camera position
         userLatLng?.let { userLocation ->
@@ -351,7 +355,7 @@ class NearbyFragment : Fragment(), OnMapReadyCallback {
             }
 
             override fun onFailure(call: Call<DirectionsResponse>, t: Throwable) {
-                // Handle failure
+
             }
         })
     }
