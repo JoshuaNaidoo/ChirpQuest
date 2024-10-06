@@ -8,7 +8,8 @@ data class BirdCapture(
     var location: String? = null,
     var description: String? = null,
     var imageUrl: String? = null,
-    var userId: String? = null
+    var userId: String? = null,
+    val username: String = ""
 ) {
     // No-argument constructor for Firestore deserialization
     constructor() : this(null, null, null, null, null, null, null)

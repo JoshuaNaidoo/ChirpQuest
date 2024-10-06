@@ -34,7 +34,6 @@ import android.location.LocationManager
 import android.util.Log
 import android.provider.Settings
 import android.widget.EditText
-import android.widget.TextView
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.model.Polyline
 
