@@ -20,7 +20,7 @@
 
     <fragment
         android:id="@+id/nav_nearby"
-        android:name="com.rosebank.st10070002.chirpquest.NearbyFragment"
+        android:name="com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment"
         android:label="menu_nearby"
         tools:layout="@layout/fragment_nearby" />
     <fragment

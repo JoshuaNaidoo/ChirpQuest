@@ -2,12 +2,9 @@ package com.rosebank.st10070002.chirpquest
 
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import androidx.fragment.app.FragmentManager
-import androidx.fragment.app.FragmentTransaction
 import com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment
+import com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment
 
-import com.rosebank.st10070002.chirpquest.ui.FindingsListing.FindingsListingFragment
-// import com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment
 
 class HomePage : AppCompatActivity() {
 
