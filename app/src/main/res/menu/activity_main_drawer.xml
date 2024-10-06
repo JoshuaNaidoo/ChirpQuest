@@ -6,7 +6,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/menu_home"
-            android:icon="@drawable/baseline_add_home_chirpquest"
+            android:icon="@drawable/baseline_home_24"
             android:title="Home" />
         <item
             android:id="@+id/menu_nearby"
@@ -19,21 +19,21 @@
         <item
             android:id="@+id/menu_findings"
             android:title="Findings"
-            android:icon="@drawable/ic_menu_gallery" />
+            android:icon="@drawable/baseline_find_in_page_24" />
 
         <item
             android:id="@+id/nav_flock"
             android:title="Flock"
-            android:icon="@drawable/ic_menu_gallery" />
+            android:icon="@drawable/flock_chat_bubble_24" />
 
         <item
             android:id="@+id/menu_settings"
             android:title="Settings"
-            android:icon="@drawable/ic_menu_gallery" />
+            android:icon="@drawable/baseline_settings_24" />
 
         <item
             android:id="@+id/menu_logout"
             android:title="Logout"
-            android:icon="@drawable/ic_menu_gallery" />
+            android:icon="@drawable/baseline_logout_24" />
     </group>
 </menu>

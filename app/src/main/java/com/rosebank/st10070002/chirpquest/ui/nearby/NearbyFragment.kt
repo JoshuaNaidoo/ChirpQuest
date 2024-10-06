@@ -1,4 +1,4 @@
-package com.rosebank.st10070002.chirpquest
+package com.rosebank.st10070002.chirpquest.ui.nearby
 
 import android.Manifest
 import android.content.Context
@@ -36,6 +36,11 @@ import android.provider.Settings
 import android.widget.EditText
 import androidx.appcompat.app.AlertDialog
 import com.google.android.gms.maps.model.Polyline
+import com.rosebank.st10070002.chirpquest.BirdHotspot
+import com.rosebank.st10070002.chirpquest.BirdHotspotService
+import com.rosebank.st10070002.chirpquest.DirectionsResponse
+import com.rosebank.st10070002.chirpquest.DirectionsService
+import com.rosebank.st10070002.chirpquest.R
 
 
 class NearbyFragment : Fragment(), OnMapReadyCallback {
