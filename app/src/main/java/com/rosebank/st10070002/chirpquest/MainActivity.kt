@@ -1,8 +1,10 @@
 package com.rosebank.st10070002.chirpquest
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.google.android.material.snackbar.Snackbar
@@ -37,6 +39,7 @@ class MainActivity : AppCompatActivity() {
 
         // Get the username passed from LoginActivity
         val username = intent.getStringExtra("username")
+
 
         // Create the SettingsFragment and pass the username as an argument
         val fragment = SettingsFragment()
@@ -81,6 +84,18 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, HomeFragment())
                         .commit()
+                }
+                R.id.menu_logout -> {
+                    supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    // Create an Intent to go back to the LoginActivity
+                    val intent = Intent(this, LoginPage::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+                    // Start the LoginActivity
+                    startActivity(intent)
+
+                    // Finish the current MainActivity to prevent returning to it
+                    finish()
                 }
                 R.id.menu_findings -> {
                     // Replace fragment with CreateFindingsFragment
