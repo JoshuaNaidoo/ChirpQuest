@@ -1,8 +1,11 @@
 package com.rosebank.st10070002.chirpquest
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
+import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
 import com.google.android.material.snackbar.Snackbar
@@ -27,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
+    private var isHomefragmentLoaded = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -38,11 +43,14 @@ class MainActivity : AppCompatActivity() {
         // Get the username passed from LoginActivity
         val username = intent.getStringExtra("username")
 
+
         // Create the SettingsFragment and pass the username as an argument
         val fragment = SettingsFragment()
         val bundle = Bundle()
         bundle.putString("username", username)
         fragment.arguments = bundle
+
+
 
         // Floating action button setup
         binding.appBarMain.fab.setOnClickListener { view ->
@@ -70,9 +78,11 @@ class MainActivity : AppCompatActivity() {
             ), drawerLayout
         )
 
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+       // home_Nearby_Btn.setOnClickListener
         // Set up NavigationView item selection handling
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -81,6 +91,18 @@ class MainActivity : AppCompatActivity() {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, HomeFragment())
                         .commit()
+                }
+                R.id.menu_logout -> {
+                    supportFragmentManager.popBackStack(null, androidx.fragment.app.FragmentManager.POP_BACK_STACK_INCLUSIVE)
+                    // Create an Intent to go back to the LoginActivity
+                    val intent = Intent(this, LoginPage::class.java)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+
+                    // Start the LoginActivity
+                    startActivity(intent)
+
+                    // Finish the current MainActivity to prevent returning to it
+                    finish()
                 }
                 R.id.menu_findings -> {
                     // Replace fragment with CreateFindingsFragment
@@ -91,6 +113,11 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_nearby -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, NearbyFragment())
+                        .commit()
+                }
+                R.id.nav_flock -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, FlockFragment())
                         .commit()
                 }
                 R.id.menu_capture -> {
@@ -141,5 +168,30 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun nearbyButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, NearbyFragment())
+            .commit()
+    }
+
+    fun captureButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
+            .commit()
+    }
+
+    fun findingsButtonClick(view: View) {
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, ViewFindingsFragment())
+            .commit()
+    }
+
+    fun flockButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, FlockFragment())
+            .commit()
     }
 }
