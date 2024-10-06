@@ -23,11 +23,13 @@
         android:name="com.rosebank.st10070002.chirpquest.ui.nearby.NearbyFragment"
         android:label="menu_nearby"
         tools:layout="@layout/fragment_nearby" />
+
     <fragment
         android:id="@+id/nav_ViewFindingsFragment"
         android:name="com.rosebank.st10070002.chirpquest.ViewFindingsFragment"
         android:label="@string/menu_view_findings"
         tools:layout="@layout/fragment_view_findings" />
+
     <fragment
         android:id="@+id/nav_capture"
         android:name="com.rosebank.st10070002.chirpquest.ui.capture.CaptureFragment"
@@ -39,6 +41,7 @@
         android:name="com.rosebank.st10070002.chirpquest.FlockFragment"
         android:label="menu_flock"
         tools:layout="@layout/fragment_flock" />
+
     <fragment
         android:id="@+id/nav_settings"
         android:name="com.rosebank.st10070002.chirpquest.ui.settings.SettingsFragment"

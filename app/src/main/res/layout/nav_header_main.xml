@@ -10,8 +10,7 @@
     android:paddingTop="4dp"
     android:paddingRight="8dp"
     android:paddingBottom="16dp"
-    android:theme="@style/ThemeOverlay.AppCompat.Dark">
-
+    android:theme="@style/ThemeOverlay.AppCompat.Light">
 
 
     <TextView
@@ -20,7 +19,7 @@
         android:paddingStart="30dp"
         android:paddingEnd="30dp"
         android:text="MENU"
-        android:textSize="24sp"
-        android:textColor="@color/black"/>
+        android:textColor="@color/black"
+        android:textSize="24sp" />
 
 </LinearLayout>

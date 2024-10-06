@@ -51,15 +51,6 @@ class MainActivity : AppCompatActivity() {
         bundle.putString("username", username)
         fragment.arguments = bundle
 
-
-
-        // Floating action button setup
-        binding.appBarMain.fab.setOnClickListener { view ->
-            Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                .setAction("Action", null)
-                .setAnchorView(R.id.fab).show()
-        }
-
         drawerLayout = binding.drawerLayout
         val navView: NavigationView = binding.navView
         val navController = findNavController(R.id.nav_host_fragment_content_main)

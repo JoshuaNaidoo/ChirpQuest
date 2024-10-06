@@ -12,6 +12,7 @@ class LogoutFragment : Fragment(){
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View {
 
+
         val root = inflater.inflate(R.layout.activity_login_page,container,false)
 
         return root
