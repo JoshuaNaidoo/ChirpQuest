@@ -19,7 +19,6 @@ class HomePage : AppCompatActivity() {
         fragmentTransaction.replace(R.id.nav_host_fragment_content_main, fragment)
         fragmentTransaction.commit()
     }
-
  */
 
     fun nearbyButtonClick(view: View) {

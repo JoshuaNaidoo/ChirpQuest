@@ -93,6 +93,11 @@ class MainActivity : AppCompatActivity() {
                         .replace(R.id.nav_host_fragment_content_main, NearbyFragment())
                         .commit()
                 }
+                R.id.nav_flock -> {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.nav_host_fragment_content_main, FlockFragment())
+                        .commit()
+                }
                 R.id.menu_capture -> {
                     supportFragmentManager.beginTransaction()
                         .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
