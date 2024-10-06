@@ -4,6 +4,7 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
+import android.view.View
 import android.widget.Button
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.core.view.GravityCompat
@@ -29,6 +30,8 @@ class MainActivity : AppCompatActivity() {
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var toggle: ActionBarDrawerToggle
 
+    private var isHomefragmentLoaded = true
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -46,6 +49,8 @@ class MainActivity : AppCompatActivity() {
         val bundle = Bundle()
         bundle.putString("username", username)
         fragment.arguments = bundle
+
+
 
         // Floating action button setup
         binding.appBarMain.fab.setOnClickListener { view ->
@@ -73,9 +78,11 @@ class MainActivity : AppCompatActivity() {
             ), drawerLayout
         )
 
+
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
 
+       // home_Nearby_Btn.setOnClickListener
         // Set up NavigationView item selection handling
         navView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
@@ -161,5 +168,30 @@ class MainActivity : AppCompatActivity() {
             return true
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    fun nearbyButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, NearbyFragment())
+            .commit()
+    }
+
+    fun captureButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, CaptureFragment())
+            .commit()
+    }
+
+    fun findingsButtonClick(view: View) {
+
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, ViewFindingsFragment())
+            .commit()
+    }
+
+    fun flockButtonClick(view: View) {
+        supportFragmentManager.beginTransaction()
+            .replace(R.id.nav_host_fragment_content_main, FlockFragment())
+            .commit()
     }
 }
